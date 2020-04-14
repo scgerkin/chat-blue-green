@@ -1,14 +1,14 @@
 pipeline {
   agent any
   stages {
-    stage ('Lint') {
-      steps {
-        sh 'mvn checkstyle:check'
-      }
-    }
     stage ('Initialize with clean target dir') {
       steps {
         sh 'mvn clean'
+      }
+    }
+    stage ('Lint') {
+      steps {
+        sh 'mvn checkstyle:check'
       }
     }
     stage ('Compile Sources') {
