@@ -48,10 +48,12 @@ pipeline {
         }
       }
     }
-    stage ('Clean-up target dir') {
-      steps {
-        sh 'mvn clean'
+  }
+  post {
+      always {
+          script {
+              sh 'mvn clean'
+          }
       }
-    }
   }
 }
