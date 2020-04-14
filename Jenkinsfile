@@ -1,3 +1,5 @@
+successMsg = "Build: \"${currentBuild.fullDisplayName}\" has finished successfully."
+
 pipeline {
   agent any
   stages {
@@ -44,7 +46,14 @@ pipeline {
     stage ('Deploy to AWS') {
       steps {
         withAWS(region:'us-east-1',credentials:'aws-static') {
-          s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, workingDir:"target", includePathPattern:"*.jar", path:"chat-app/branch/", bucket:"scgrk.jenkins.pipeline")
+          s3Upload(
+            pathStyleAccessEnabled: true,
+            payloadSigningEnabled: true,
+            workingDir:"target",
+            includePathPattern:"*.jar",
+            path:"chat-app/branch/",
+            bucket:"scgrk.jenkins.pipeline"
+          )
         }
       }
     }
@@ -57,7 +66,10 @@ pipeline {
     }
     success {
       withAWS(region:'us-east-1',credentials:'aws-static') {
-        snsPublish(topicArn: "arn:aws:sns:us-east-1:854235326474:SCGRK-AWS", subject: "Jenkins Post-build", message: "Build success.")
+        snsPublish(
+          topicArn: "arn:aws:sns:us-east-1:854235326474:SCGRK-AWS",
+          subject: "Successful Pipeline Build",
+          message: successMsg)
       }
     }
   }
