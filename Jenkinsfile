@@ -31,6 +31,16 @@ pipeline {
                 sh 'mvn package -DskipTests'
             }
         }
+        stage ('SpotBugs') {
+          steps {
+            sh 'mvn spotbugs:check'
+          }
+        }
+        stage ('PMD Source Code Analyzer') {
+          steps {
+            sh 'mvn pmd:check'
+          }
+        }
         stage ('Deploy to AWS') {
             steps {
             withAWS(region:'us-east-1',credentials:'aws-static') {
