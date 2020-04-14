@@ -50,10 +50,15 @@ pipeline {
     }
   }
   post {
-      always {
-          script {
-              sh 'mvn clean'
-          }
+    always {
+      script {
+          sh 'mvn clean'
       }
+    }
+    success {
+      withAWS(region:'us-east-1',credentials:'aws-static') {
+        snsPublish(topicArn: "arn:aws:sns:us-east-1:854235326474:SCGRK-AWS", subject: "Jenkins Post-build", message: "Build success.")
+      }
+    }
   }
 }
